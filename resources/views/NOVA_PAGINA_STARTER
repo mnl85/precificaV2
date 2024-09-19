@@ -1,0 +1,90 @@
+<x-page-template bodyClass='g-sidenav-show  bg-gray-200'>
+    <!-- Sidebar Ativa inicio -->
+    <x-auth.navbars.sidebar 
+        activePage="meusDados" 
+        activeItem="meusMateriais" 
+        activeSubitem=""
+    >
+    </x-auth.navbars.sidebar>
+    <!-- Sidebar Ativa fim -->
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <!-- Navbar Route Titles -->
+            <x-auth.navbars.navs.auth 
+                pageTitle="Painel de Controles" 
+                itemTitle="Ajustes da Conta" 
+                subItemTitle="" 
+            >
+            </x-auth.navbars.navs.auth>
+        <!-- End Navbar Route Titles -->
+        <style>
+
+        </style>
+        <div class="container-fluid py-4">
+                <!-- CABEÇALHO INICIAL inicio -->
+            <div class="card p-4">
+                <h5 class="mb-0">Meus Serviços</h5>
+                <div class="flex justify-between pt-4">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#modalNovoMeuTrabalho">
+                    Cadastrar Novo Serviço
+                    </button>
+                </div>
+            </div>
+            <!-- CABEÇALHO INICIAL fim -->
+            @if (Session::has('status'))
+                <div class="alert alert-success alert-dismissible text-white mx-4" role="alert">
+                    <span class="text-sm">{{ Session::get('status') }}</span>
+                    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+            <!-- ########## CONTENTS inicio ########### -->
+
+
+                <!-- TABELA BASICA -->
+                <div class="card  my-4 p-4">
+                    <div class="table-responsive">
+                        <table class="table table-flush" id="datatable-basic" id="dataTable" >
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                @foreach ($tb_equipamentos as $m)
+                                <tr data-row-id="{{ $m['id'] }}">
+                                    <td class="text-sm font-weight-bold corUserEdit" contenteditable="true" onblur="updateEquipamento(this, 'nome_equipamento')">{{ $m['nome_equipamento'] }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @if(!$tb_equipamentos->isEmpty())
+                            <span class="px-6 py-2" style="font-weight: light; font-size: 12px; color: gray;">* Células onde o texto é <span style="font-weight: bold; color: #34acdb;">azul</span> são editáveis. Altere o valor e clique fora para salvar.</span>
+                        @endif
+                    </div>
+                </div>
+                <!-- TABELA BASICA -->
+
+            <!-- ########## CONTENTS fim ########### -->
+            
+
+        
+
+        <x-auth.footers.auth.footer></x-auth.footers.auth.footer>
+
+    </main>
+    <x-plugins></x-plugins>
+    @push('js')
+
+    <script src="{{ asset('assets') }}/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="{{ asset('assets') }}/js/plugins/datatables.js"></script>
+    <script>
+        const dataTableBasic = new simpleDatatables.DataTable("#datatable-basic", {
+            searchable: true,
+            fixedHeight: false
+        });
+    </script>
+    @endpush
+</x-page-template>
